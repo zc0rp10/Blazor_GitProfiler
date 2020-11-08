@@ -1,0 +1,13 @@
+﻿<div class="row">
+    <div class="stats-deck">
+        <StatsCard Num=@UserData.public_repos Label="Repositories" />
+        <StatsCard Num=@UserData.followers Label="Followers" />
+        <StatsCard Num=@UserData.following Label="Following" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public GithubUser UserData { get; set; }
+
+}

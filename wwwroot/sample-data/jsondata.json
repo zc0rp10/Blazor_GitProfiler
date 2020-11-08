@@ -1,0 +1,16 @@
+﻿[
+   {
+      "customer": {
+         "first_name": "Sven",
+         "last_name": "Andersson",
+         "email": "test1@example.com"
+      }
+   },
+   {
+      "customer": {
+         "first_name": "Per",
+         "last_name": "Karlsson",
+         "email": "test2@example.com"
+      }
+   }
+]

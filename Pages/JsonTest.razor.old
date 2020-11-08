@@ -1,0 +1,85 @@
+@page "/jsontest"
+@inject HttpClient Http
+
+<h1>JSON Test</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+<div class="row">
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">&#64;</span>
+        </div>
+        <input @bind="userName" type="text" class="form-control" placeholder="Username" aria-label="Username"
+            aria-describedby="basic-addon1">
+    </div>
+    <button class="btn btn-primary" @onclick="GetData">Submit</button>
+</div>
+@if (reposData == null)
+{
+    <br />
+    <br />
+    <p>Please enter a user name..</p>
+}
+else
+{
+    try
+    {
+
+        <img src=@userData.avatar_url />
+        <h1>@userData.name</h1>
+        <p>@userData.login</p>
+
+        <div class="row row-cols-3 row-cols-md-3">
+            @foreach (var repo in reposData)
+            {
+                <div class="col mb-4">
+                    <div class="card h-100">
+                        <h5 class="card-title">@repo.name</h5>
+                        <div class="card-body">
+                            <p class="card-text">@repo.description</p>
+                            <a href="#" class="card-link">@repo.language</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    catch (Exception e)
+    {
+        System.Console.WriteLine(e.Message);
+    }
+
+}
+
+
+@code {
+    private GithubUser userData = new GithubUser();
+    private List<GithubRepo> reposData = new List<GithubRepo>();
+    
+    private string userName;
+
+    @* protected override async Task OnInitializedAsync()
+        {
+        //Prefetch something
+        } *@
+
+    private async Task GetData()
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                var rawJsonString = await Http.GetStringAsync($"https://api.github.com/users/{userName}");
+                userData = JsonConvert.DeserializeObject<GithubUser>(rawJsonString);
+
+                var temp = await Http.GetStringAsync($"https://api.github.com/users/{userName}/repos");
+                reposData = JsonConvert.DeserializeObject<List<GithubRepo>>(temp);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+}

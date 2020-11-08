@@ -1,0 +1,38 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<main>
+    @if (_githubUser.login != null)
+    {
+
+        <UserInfo UserData="_githubUser"/>
+        <section class="">
+            <h1>Charts will go here.</h1>
+        </section>
+        <section style="height: 20vh;">
+            <h1>Repos will go here.</h1>
+        </section>
+        <Footer />
+    }
+    else
+    {
+        <UserForm OnSubmit="SubmitHandler" />
+    }
+</main>
+
+@code {
+    GithubUser _githubUser = new GithubUser();
+
+    private async Task SubmitHandler(string inputUserName)
+    {
+        try
+        {
+            var rawJsonString = await Http.GetStringAsync($"https://api.github.com/users/{inputUserName}");
+            _githubUser = JsonConvert.DeserializeObject<GithubUser>(rawJsonString);
+        }
+        catch (Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+        }
+    }
+}

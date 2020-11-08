@@ -1,0 +1,42 @@
+﻿<section class="p-section bg-git-dark text-light-blue">
+    <div class="container d-flex flex-column align-items-center text-center">
+        <div class="mb-4" style="width:150px; height:150px;">
+            <img class="img-fluid rounded-circle border border-primary" style="border-width:0.5rem!important"
+                src="@UserData.avatar_url" alt="avatar">
+        </div>
+        <h1 class="text-light">@UserData.name</h1>
+        <h4 class="text-monospace mb-4"><a href="/">@UserData.login</a></h4>
+        <div class="info">
+            <div class="mt-0 mx-3 mb-2 d-flex align-items-center justify-content-center">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path fill="currentColor" fill-rule="evenodd"
+                        d="M6.75 0A1.75 1.75 0 005 1.75V3H1.75A1.75 1.75 0 000 4.75v8.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0016 13.25v-8.5A1.75 1.75 0 0014.25 3H11V1.75A1.75 1.75 0 009.25 0h-2.5zM9.5 3V1.75a.25.25 0 00-.25-.25h-2.5a.25.25 0 00-.25.25V3h3zM5 4.5H1.75a.25.25 0 00-.25.25V6a2 2 0 002 2h9a2 2 0 002-2V4.75a.25.25 0 00-.25-.25H5zm-1.5 5a3.484 3.484 0 01-2-.627v4.377c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V8.873a3.484 3.484 0 01-2 .627h-9z">
+                    </path>
+                </svg>
+                <span>@UserData.company</span>
+            </div>
+            <div class="mt-0 mx-3 mb-2 d-flex align-items-center justify-content-center">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path fill="currentColor" fill-rule="evenodd"
+                        d="M11.536 3.464a5 5 0 010 7.072L8 14.07l-3.536-3.535a5 5 0 117.072-7.072v.001zm1.06 8.132a6.5 6.5 0 10-9.192 0l3.535 3.536a1.5 1.5 0 002.122 0l3.535-3.536zM8 9a2 2 0 100-4 2 2 0 000 4z">
+                    </path>
+                </svg>
+                <span>@UserData.location</span>
+            </div>
+            <div class="mt-0 mx-3 mb-2 d-flex align-items-center justify-content-center">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path fill="currentColor" fill-rule="evenodd"
+                        d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z">
+                    </path>
+                </svg>
+                <span>Joined @UserData.created_at.ToString("MMMM dd, yyyy")</span>
+            </div>
+        </div>
+        <StatsDeck UserData="UserData" />
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public GithubUser UserData { get; set; }
+}
