@@ -6,7 +6,9 @@
         </div>
         <h1 class="text-light">@UserData.name</h1>
         <h4 class="text-monospace mb-4"><a href="/">@UserData.login</a></h4>
-        <div class="info">
+
+        <div class="info text-nowrap">
+        @if (UserData.company != null) {
             <div class="mt-0 mx-3 mb-2 d-flex align-items-center justify-content-center">
                 <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                     <path fill="currentColor" fill-rule="evenodd"
@@ -15,6 +17,7 @@
                 </svg>
                 <span>@UserData.company</span>
             </div>
+        }
             <div class="mt-0 mx-3 mb-2 d-flex align-items-center justify-content-center">
                 <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                     <path fill="currentColor" fill-rule="evenodd"

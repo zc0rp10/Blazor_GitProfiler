@@ -5,13 +5,9 @@
     @if (_githubUser.login != null)
     {
 
-        <UserInfo UserData="_githubUser"/>
-        <section class="">
-            <h1>Charts will go here.</h1>
-        </section>
-        <section style="height: 20vh;">
-            <h1>Repos will go here.</h1>
-        </section>
+        <UserInfo UserData="_githubUser" />
+        @* <UserCharts /> *@
+        <UserRepos ReposData="_githubUserRepos" />
         <Footer />
     }
     else
@@ -22,6 +18,17 @@
 
 @code {
     GithubUser _githubUser = new GithubUser();
+    List<GithubRepo> _githubUserRepos = new List<GithubRepo>();
+
+    //TODO: Remove OnInitializedAsync() at end of project. Temp functions so you don't have to enter a user every time.
+    protected override async Task OnInitializedAsync()
+    {
+        var tempUserJson = await Http.GetStringAsync($"https://api.github.com/users/bchiang7");
+        _githubUser = JsonConvert.DeserializeObject<GithubUser>(tempUserJson);
+
+        var tempRepoJson = await Http.GetStringAsync($"https://api.github.com/users/bchiang7/repos");
+        _githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson);
+    }
 
     private async Task SubmitHandler(string inputUserName)
     {
