@@ -23,10 +23,10 @@
     //TODO: Remove OnInitializedAsync() at end of project. Temp functions so you don't have to enter a user every time.
     protected override async Task OnInitializedAsync()
     {
-        var tempUserJson = await Http.GetStringAsync($"https://api.github.com/users/bchiang7");
+        var tempUserJson = await Http.GetStringAsync($"https://api.github.com/users/zc0rp10");
         _githubUser = JsonConvert.DeserializeObject<GithubUser>(tempUserJson);
 
-        var tempRepoJson = await Http.GetStringAsync($"https://api.github.com/users/bchiang7/repos");
+        var tempRepoJson = await Http.GetStringAsync($"https://api.github.com/users/zc0rp10/repos");
         _githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson);
     }
 
