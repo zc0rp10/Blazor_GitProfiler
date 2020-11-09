@@ -3,17 +3,22 @@
         <h2>Top Repos</h2>
         <span class="mx-3 text-muted">by</span>
         <div class="dropdown">
-            <button class="btn btn-primary">
-                Dropdown
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @SortOrderLabel
             </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a @onclick="(() => SortHandler(0))" class="dropdown-item">Stars</a>
+                <a @onclick="(() => SortHandler(1))" class="dropdown-item">Forks</a>
+                <a @onclick="(() => SortHandler(2))" class="dropdown-item">Size</a>
+            </div> 
         </div>
     </div>
     <div class="row">
         @for (int i = 0; i < LIMIT; i++)
         {
-            <RepoCard Name="@ReposData[i].name"
-                Description="@ReposData[i].description"
-                Language="@ReposData[i].language" StargazersCount=@ReposData[i].stargazers_count Forks=@ReposData[i].forks_count Size=@ReposData[i].size />
+            <RepoCard Name="@ReposData[i].name" Description="@ReposData[i].description" Language="@ReposData[i].language"
+                StargazersCount=@ReposData[i].stargazers_count Forks=@ReposData[i].forks_count Size=@ReposData[i].size />
         }
     </div>
 </section>
@@ -22,5 +27,37 @@
     [Parameter]
     public List<GithubRepo> ReposData { get; set; }
     public int LIMIT = 8;
+
+    private string SortOrderLabel = "Stars";
+
+    private void SortHandler(int num)
+    {
+        switch (num)
+        {
+            case 0:
+            {
+                ReposData = ReposData.OrderByDescending(o => o.stargazers_count).ToList();
+                SortOrderLabel = "Stars";
+                break;
+            }
+            case 1:
+            {
+                ReposData = ReposData.OrderByDescending(o => o.forks_count).ToList();
+                SortOrderLabel = "Forks";
+                break;
+            }
+            case 2:
+            {
+                ReposData = ReposData.OrderByDescending(o => o.size).ToList();
+                SortOrderLabel = "Size";
+                break;
+            }
+            default:
+            {
+                ReposData = ReposData.OrderByDescending(o => o.stargazers_count).ToList();
+                break;
+            }
+        }
+    }
 
 }

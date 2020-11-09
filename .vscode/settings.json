@@ -3,6 +3,7 @@
         "id",
         "minmax",
         "spdx",
-        "spdx id"
+        "spdx id",
+        "webassembly"
     ]
 }
