@@ -1,17 +1,17 @@
 ﻿<section class="container py-5">
     <div class="d-flex align-items-center mb-4">
-        <h2>Top Repos</h2>
-        <span class="mx-3 text-muted">by</span>
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <h2 class="pb-2" style="background-image: linear-gradient(90deg, rgb(209, 213, 218) 50%, rgba(255, 255, 255, 0) 0px);background-position: center bottom;background-repeat: repeat-x;background-size: 10px 2px;">Top Repos</h2>
+        <span class="pb-2 mx-3 text-muted">by</span>
+        <div class="pb-2 dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 @SortOrderLabel
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a @onclick="(() => SortHandler(0))" class="dropdown-item">Stars</a>
                 <a @onclick="(() => SortHandler(1))" class="dropdown-item">Forks</a>
                 <a @onclick="(() => SortHandler(2))" class="dropdown-item">Size</a>
-            </div> 
+            </div>
         </div>
     </div>
     <div class="row">
@@ -30,33 +30,38 @@
 
     private string SortOrderLabel = "Stars";
 
+    protected override void OnInitialized() //To fix bug where there was an error if user had less then LIMIT repos in profile.
+    {
+        if (ReposData.Count < 8){LIMIT = ReposData.Count;};
+    }
+
     private void SortHandler(int num)
     {
         switch (num)
         {
             case 0:
-            {
-                ReposData = ReposData.OrderByDescending(o => o.stargazers_count).ToList();
-                SortOrderLabel = "Stars";
-                break;
-            }
+                {
+                    ReposData = ReposData.OrderByDescending(o => o.stargazers_count).ToList();
+                    SortOrderLabel = "Stars";
+                    break;
+                }
             case 1:
-            {
-                ReposData = ReposData.OrderByDescending(o => o.forks_count).ToList();
-                SortOrderLabel = "Forks";
-                break;
-            }
+                {
+                    ReposData = ReposData.OrderByDescending(o => o.forks_count).ToList();
+                    SortOrderLabel = "Forks";
+                    break;
+                }
             case 2:
-            {
-                ReposData = ReposData.OrderByDescending(o => o.size).ToList();
-                SortOrderLabel = "Size";
-                break;
-            }
+                {
+                    ReposData = ReposData.OrderByDescending(o => o.size).ToList();
+                    SortOrderLabel = "Size";
+                    break;
+                }
             default:
-            {
-                ReposData = ReposData.OrderByDescending(o => o.stargazers_count).ToList();
-                break;
-            }
+                {
+                    ReposData = ReposData.OrderByDescending(o => o.stargazers_count).ToList();
+                    break;
+                }
         }
     }
 

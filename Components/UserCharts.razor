@@ -1,0 +1,244 @@
+﻿<section class="container py-5" style="max-width: 1200px;">
+    <div class="row text-center" style="margin-top:-8rem;">
+        <div class="col-md-6 col-lg-6 col-xl-4 py-2">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">
+                Top Languages
+                </h4>
+            </div>
+            <div class="card-body">
+                <Chart Config="_topLanguages"></Chart>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-4 py-2">
+
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">
+                Most Stared
+                </h4>
+            </div>
+            <div class="card-body">
+                <Chart Config="_config"></Chart>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-4 py-2">
+
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">
+                Stars per Language
+                </h4>
+            </div>
+            <div class="card-body">
+                <Chart Config="_spLanguages"></Chart>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public List<GithubRepo> ReposData { get; set; }
+    public List<LanguageModel> languageList = new List<LanguageModel>();
+
+
+    private PieConfig _topLanguages;
+    private PieConfig _spLanguages;
+    private BarConfig _config;
+
+    protected override void OnInitialized()
+    {
+        foreach (var repo in ReposData)
+        {
+            if (repo.language != null)
+            {
+                LanguageModel temp = new LanguageModel(repo.language, repo.stargazers_count);
+                if (!languageList.Any(langObj => langObj.language == temp.language))
+                {
+                    languageList.Add(temp);
+                }
+                else
+                {
+                    var o = languageList.Single(langObj => langObj.language == temp.language);
+                    o.AddOneToCount();
+                    o.AddStarCount(temp.stargazersCount);
+                }
+            }
+        }
+
+        languageList.ForEach(x => System.Console.WriteLine("Lang: " + x.language + ", Count: " + x.currentCount + ", Star Count: " + x.stargazersCount));
+
+        List<string> labelList = new List<string>();
+        List<int> currentCountList = new List<int>();
+        List<int> starCountList = new List<int>();
+        List<string> backgroundColorList = new List<string>();
+
+        foreach (var item in languageList)
+        {
+            labelList.Add(item.language);
+            currentCountList.Add(item.currentCount);
+            starCountList.Add(item.stargazersCount);
+            backgroundColorList.Add(LanguageColor(item.language));
+        }
+
+        MakeTopLangChart(labelList, currentCountList, backgroundColorList);
+        MakeStarPerLangChart(labelList, starCountList, backgroundColorList);
+        MakeMostStaredChart(backgroundColorList);
+    }
+
+    public string LanguageColor(string lang)
+    {
+        switch (lang)
+        {
+        case "JavaScript":
+            return "#f1e05a";
+        case "HTML":
+            return "#e44b23";
+        case "CSS":
+            return "#563d7c";
+        case "Python":
+            return "#3572A5";
+        case "Java":
+            return "#b07219";
+        case "C#":
+            return "#178600";
+        case "PHP":
+            return "#4F5D95";
+        case "C":
+            return "#555555";
+        case "C++":
+            return "#34b7d";
+        case "R":
+            return "#198ce7";
+        case "Shell":
+            return "#89e051";
+        case "Go":
+            return "#375eab";
+        case "TypeScript":
+            return "#2b7489";
+        case "Vue":
+            return "#2c3e50";
+        case "Ruby":
+            return "#701516";
+        case "Swift":
+            return "#ffac45";
+        case "Objective-C":
+            return "#6866fb";
+        default:
+            return ColorUtil.RandomColorString();
+        }
+    }
+
+    public void MakeTopLangChart(List<string> labelList, List<int> datasetList, List<string> backgroundColorList)
+    {
+        _topLanguages = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                AspectRatio = 1,
+                Legend = new Legend
+            {
+                Position = Position.Bottom
+            },
+            }
+        };
+
+        PieDataset<int> dataset = new PieDataset<int>(datasetList.ToArray())
+        {
+            BackgroundColor = backgroundColorList.ToArray()
+        };
+
+    labelList.ForEach(label => _topLanguages.Data.Labels.Add(label));
+    
+    _topLanguages.Data.Datasets.Add(dataset);
+    }
+
+    public void MakeStarPerLangChart(List<string> labelList, List<int> datasetList, List<string> backgroundColorList)
+    {
+        _spLanguages = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                AspectRatio = 1,
+                Legend = new Legend
+            {
+                Position = Position.Bottom
+            },
+            }
+        };
+
+        PieDataset<int> dataset = new PieDataset<int>(datasetList.ToArray())
+        {
+            BackgroundColor = backgroundColorList.ToArray()
+        };
+
+    labelList.ForEach(label => _spLanguages.Data.Labels.Add(label));
+    
+    _spLanguages.Data.Datasets.Add(dataset);
+    }
+
+    public void MakeMostStaredChart(List<string> backgroundColorList)
+    {
+        _config = new BarConfig
+        {
+            Options = new BarOptions
+            {
+                Responsive = true,
+                AspectRatio = 1,
+                Legend = new Legend
+                {
+                    Display = false
+                },
+                Scales = new BarScales
+                {
+                    XAxes = new List<CartesianAxis>
+                    {
+                        new BarCategoryAxis
+                        {
+                            BarPercentage = 0.5,
+                            BarThickness = BarThickness.Flex
+                        }
+                    },
+                    YAxes = new List<CartesianAxis>
+                    {
+                        new BarLinearCartesianAxis
+                        {
+                            Ticks = new LinearCartesianTicks
+                            {
+                                BeginAtZero = false
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        List<int> repoStarList = new List<int>();
+
+        int LIMIT = 5;
+
+        if (ReposData.Count < 5) {LIMIT = ReposData.Count;};
+
+        for (int i = 0; i < LIMIT; i++)
+        {
+            repoStarList.Add(ReposData[i].stargazers_count);
+            _config.Data.Labels.Add(ReposData[i].name);
+        }
+
+        BarDataset<int> reposDataset = new BarDataset<int>
+        {
+            Label = "Stars",
+            BackgroundColor = backgroundColorList.ToArray()
+        };
+        reposDataset.AddRange(repoStarList.ToArray());
+
+        _config.Data.Datasets.Add(reposDataset);
+    }
+}
