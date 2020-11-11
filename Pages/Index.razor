@@ -5,14 +5,14 @@
     @if (githubUser.login != null)
     {
 
-        <UserInfo UserData="githubUser" />
-        @* <UserCharts /> *@
-        <UserRepos ReposData="githubUserRepos" />
-        <Footer />
+            <UserInfo UserData="githubUser" />
+            <UserCharts ReposData="githubUserRepos" />
+            <UserRepos ReposData="githubUserRepos" />
+            <Footer />
     }
     else
     {
-        <UserForm OnSubmit="SubmitHandler" />
+            <UserForm OnSubmit="SubmitHandler" />
     }
 </main>
 
@@ -20,22 +20,15 @@
     GithubUser githubUser = new GithubUser();
     List<GithubRepo> githubUserRepos = new List<GithubRepo>();
 
-    //TODO: Remove OnInitializedAsync() at end of project. Temp functions so you don't have to enter a user every time.
-    protected override async Task OnInitializedAsync()
-    {
-        var tempUserJson = await Http.GetStringAsync($"https://api.github.com/users/zc0rp10");
-        githubUser = JsonConvert.DeserializeObject<GithubUser>(tempUserJson);
-
-        var tempRepoJson = await Http.GetStringAsync($"https://api.github.com/users/zc0rp10/repos");
-        githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson).OrderByDescending(o => o.stargazers_count).ToList();
-    }
-
     private async Task SubmitHandler(string inputUserName)
     {
         try
         {
             var rawJsonString = await Http.GetStringAsync($"https://api.github.com/users/{inputUserName}");
             githubUser = JsonConvert.DeserializeObject<GithubUser>(rawJsonString);
+
+            var tempRepoJson = await Http.GetStringAsync($"https://api.github.com/users/{inputUserName}/repos?page=1&per_page=100");
+            githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson).OrderByDescending(o => o.stargazers_count).ToList();
         }
         catch (Exception e)
         {
