@@ -18,7 +18,7 @@
         @for (int i = 0; i < LIMIT; i++)
         {
             <RepoCard Name="@ReposData[i].name" Description="@ReposData[i].description" Language="@ReposData[i].language"
-                StargazersCount=@ReposData[i].stargazers_count Forks=@ReposData[i].forks_count Size=@ReposData[i].size />
+                StargazersCount=@ReposData[i].stargazers_count Forks=@ReposData[i].forks_count Size=@ReposData[i].size RepoUrl=@ReposData[i].html_url />
         }
     </div>
 </section>
@@ -27,7 +27,6 @@
     [Parameter]
     public List<GithubRepo> ReposData { get; set; }
     public int LIMIT = 8;
-
     private string SortOrderLabel = "Stars";
 
     protected override void OnInitialized() //To fix bug where there was an error if user had less then LIMIT repos in profile.
