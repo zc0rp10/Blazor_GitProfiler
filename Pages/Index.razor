@@ -1,21 +1,20 @@
 ﻿@page "/"
 @inject HttpClient Http
-
 <main>
     @if (githubUser.login != null)
     {
 
-        <UserInfo UserData="githubUser" />
-        <UserCharts ReposData="githubUserRepos" />
-        <UserRepos ReposData="githubUserRepos" />
-        <Footer />
+            <UserInfo UserData="githubUser" />
+            <UserCharts ReposData="githubUserRepos" />
+            <UserRepos ReposData="githubUserRepos" />
+            <Footer />
     }
     else
     {
-        <UserForm OnSubmit="SubmitHandler" IsLoading="isLoading" />
+            <UserForm OnSubmit="SubmitHandler" IsLoading="isLoading" />
     }
+    <GitCorner />
 </main>
-
 @code {
     GithubUser githubUser = new GithubUser();
     List<GithubRepo> githubUserRepos = new List<GithubRepo>();
