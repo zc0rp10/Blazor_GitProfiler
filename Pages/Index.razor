@@ -5,30 +5,33 @@
     @if (githubUser.login != null)
     {
 
-            <UserInfo UserData="githubUser" />
-            <UserCharts ReposData="githubUserRepos" />
-            <UserRepos ReposData="githubUserRepos" />
-            <Footer />
+        <UserInfo UserData="githubUser" />
+        <UserCharts ReposData="githubUserRepos" />
+        <UserRepos ReposData="githubUserRepos" />
+        <Footer />
     }
     else
     {
-            <UserForm OnSubmit="SubmitHandler" />
+        <UserForm OnSubmit="SubmitHandler" IsLoading="isLoading" />
     }
 </main>
 
 @code {
     GithubUser githubUser = new GithubUser();
     List<GithubRepo> githubUserRepos = new List<GithubRepo>();
+    public bool isLoading = false;
 
     private async Task SubmitHandler(string inputUserName)
     {
         try
         {
+            isLoading = true;
             var rawJsonString = await Http.GetStringAsync($"https://api.github.com/users/{inputUserName}");
             githubUser = JsonConvert.DeserializeObject<GithubUser>(rawJsonString);
 
             var tempRepoJson = await Http.GetStringAsync($"https://api.github.com/users/{inputUserName}/repos?page=1&per_page=100");
-            githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson).OrderByDescending(o => o.stargazers_count).ToList();
+            githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson).OrderByDescending(o =>
+            o.stargazers_count).ToList();
         }
         catch (Exception e)
         {

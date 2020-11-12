@@ -13,6 +13,12 @@
                         <h1>Find a OctoProfile</h1>
                     </label>
                     <input @bind="inputUserName" type="text" class="user-input bg-dark" name="username">
+                    @if (IsLoading == true)
+                    {
+                        <div class="mt-5 spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    }
                 </div>
             </form>
         </div>
@@ -21,7 +27,9 @@
 
 @code {
     private string inputUserName;
-
     [Parameter]
     public EventCallback<string> OnSubmit { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; }
 }
