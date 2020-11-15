@@ -4,14 +4,14 @@
     @if (githubUser.login != null)
     {
 
-            <UserInfo UserData="githubUser" />
-            <UserCharts ReposData="githubUserRepos" />
-            <UserRepos ReposData="githubUserRepos" />
-            <Footer />
+        <UserInfo UserData="githubUser" />
+        <UserCharts ReposData="githubUserRepos" />
+        <UserRepos ReposData="githubUserRepos" />
+        <Footer />
     }
     else
     {
-            <UserForm OnSubmit="SubmitHandler" IsLoading="isLoading" />
+        <UserForm OnSubmit="SubmitHandler" IsLoading="isLoading" UserDontExist="userDontExist" />
     }
     <GitCorner />
 </main>
@@ -19,11 +19,13 @@
     GithubUser githubUser = new GithubUser();
     List<GithubRepo> githubUserRepos = new List<GithubRepo>();
     public bool isLoading = false;
+    public bool userDontExist = false;
 
     private async Task SubmitHandler(string inputUserName)
     {
         try
         {
+            userDontExist = false;
             isLoading = true;
             var rawJsonString = await Http.GetStringAsync($"https://api.github.com/users/{inputUserName}");
             githubUser = JsonConvert.DeserializeObject<GithubUser>(rawJsonString);
@@ -31,6 +33,11 @@
             var tempRepoJson = await Http.GetStringAsync($"https://api.github.com/users/{inputUserName}/repos?page=1&per_page=100");
             githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson).OrderByDescending(o =>
             o.stargazers_count).ToList();
+        }
+        catch (HttpRequestException e)
+        {
+            userDontExist = true;
+            System.Console.WriteLine("Incorrect username, please try again.");
         }
         catch (Exception e)
         {
