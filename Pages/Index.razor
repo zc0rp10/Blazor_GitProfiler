@@ -34,7 +34,7 @@
             githubUserRepos = JsonConvert.DeserializeObject<List<GithubRepo>>(tempRepoJson).OrderByDescending(o =>
             o.stargazers_count).ToList();
         }
-        catch (HttpRequestException e)
+        catch (HttpRequestException)
         {
             userDontExist = true;
             System.Console.WriteLine("Incorrect username, please try again.");
